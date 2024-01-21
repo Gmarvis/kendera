@@ -1,14 +1,38 @@
 import { useState, useRef } from "react";
-import { FlatList, StyleSheet, Text, View, Animated } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Animated,
+  Pressable,
+} from "react-native";
 import slides from "../slides";
 import OnboardingItem from "./OnboardingItem";
+import Parginator from "./Parginator";
 
 const Onboarding = () => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const viewableItemChanged = useRef(({ viewableItems }: any) => {
+    setCurrentIndex(viewableItems[0].index);
+    console.log("currentIndex 56:===>>>", viewableItems[0].index);
+  }).current;
+
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
   return (
     <View style={styles.container}>
+      {currentIndex === slides.length - 1 ? (
+        <Pressable style={styles.NextBtn}>
+          <Text style={styles.BtnText}>NEXT</Text>
+        </Pressable>
+      ) : (
+        <Pressable style={styles.NextBtn}>
+          <Text style={styles.BtnText}>SKIP</Text>
+        </Pressable>
+      )}
+
       <View style={{ flex: 3 }}>
         <FlatList
           data={slides}
@@ -16,7 +40,7 @@ const Onboarding = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
-          // keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
             {
@@ -24,11 +48,12 @@ const Onboarding = () => {
             }
           )}
           scrollEventThrottle={32}
-          // onViewableItemsChanged={viewableItemChanged}
+          onViewableItemsChanged={viewableItemChanged}
           viewabilityConfig={viewConfig}
           // ref={slidesRef}
         />
       </View>
+      <Parginator data={slides} scrollX={scrollX} />
     </View>
   );
 };
@@ -43,4 +68,18 @@ const styles = StyleSheet.create({
     // backgroundColor: "#2C0C54",
     // backgroundColor: "#2C0C54",
   },
+  NextBtn: {
+    marginTop: 30,
+    alignSelf: "flex-end",
+    paddingRight: 20,
+  },
+  BtnText: {
+    fontWeight: "bold",
+    color: "#5b45db",
+  },
 });
+
+/*=======>TODO<=======|
+MAKE THE ONBOARDING AUTHOMATICALY WHEN THE SLIDES END
+
+*/

@@ -63,7 +63,7 @@ export default function App() {
             headerShown: false,
           }}
         >
-          <stack.Screen name="Home1" component={HomeTaps} />
+          {/* <stack.Screen name="Home1" component={HomeTaps} /> */}
           <stack.Screen name="onBoarding" component={Onboarding} />
           <stack.Screen name="Register" component={AuthScreen} />
           <stack.Screen name="Activities" component={Activities} />
