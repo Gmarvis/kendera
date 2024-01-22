@@ -11,24 +11,29 @@ import slides from "../slides";
 import OnboardingItem from "./OnboardingItem";
 import Parginator from "./Parginator";
 
-const Onboarding = () => {
+const Onboarding = ({ navigation }: any) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const viewableItemChanged = useRef(({ viewableItems }: any) => {
     setCurrentIndex(viewableItems[0].index);
-    console.log("currentIndex 56:===>>>", viewableItems[0].index);
+    // console.log("currentIndex 56:===>>>", viewableItems[0].index);
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+
+  const handleSkip = () => {
+    navigation.navigate("signup");
+  };
+
   return (
     <View style={styles.container}>
       {currentIndex === slides.length - 1 ? (
-        <Pressable style={styles.NextBtn}>
+        <Pressable style={styles.NextBtn} onPress={handleSkip}>
           <Text style={styles.BtnText}>NEXT</Text>
         </Pressable>
       ) : (
-        <Pressable style={styles.NextBtn}>
+        <Pressable style={styles.NextBtn} onPress={handleSkip}>
           <Text style={styles.BtnText}>SKIP</Text>
         </Pressable>
       )}

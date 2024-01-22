@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const SignUp = () => {
+const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,38 +16,27 @@ const SignUp = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create An Account</Text>
+      <Text style={styles.title}>Login to Kendera</Text>
       <View style={styles.form}>
-        <TextInput
-          style={styles.input}
-          placeholder="User name"
-          autoCorrect={false}
-        />
         <TextInput
           style={styles.input}
           placeholder="email@gmail.com"
           autoCorrect={false}
         />
 
-        <View style={styles.pwdSection}>
-          <TextInput
-            style={[styles.input, styles.pwdInput]}
-            //   secureTextEntry
-            placeholder="Password"
-          />
-          <TextInput
-            style={[styles.input, styles.pwdInput]}
-            //   secureTextEntry
-            placeholder="Confirm password"
-          />
-        </View>
+        <TextInput
+          style={styles.input}
+          secureTextEntry
+          placeholder="Password"
+        />
+
         <Pressable style={styles.pressable} onPress={handleCreateAccount}>
           <Text
             style={{
               color: "white",
             }}
           >
-            Sign Up
+            Login
           </Text>
         </Pressable>
         <View
@@ -55,7 +44,7 @@ const SignUp = () => {
         >
           <Text>Don't have an Account?</Text>
 
-          <Pressable onPress={() => navigation.navigate("login")}>
+          <Pressable onPress={() => navigation.navigate("signup")}>
             <Text
               style={{
                 color: "#5b45db",
@@ -70,7 +59,7 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;
 
 const styles = StyleSheet.create({
   container: {
