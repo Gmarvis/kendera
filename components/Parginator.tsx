@@ -17,7 +17,7 @@ const Parginator = ({ data, scrollX }: any) => {
       {data.map((_: slidesDataTypes, i: number) => {
         const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
 
-        console.log("inputRange===>>", inputRange);
+        // console.log("inputRange===>>", inputRange);
 
         const dotWidth = scrollX.interpolate({
           inputRange,

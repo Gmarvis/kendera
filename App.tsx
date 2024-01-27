@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, Text, View, StatusBar } from "react-native";
 import Onboarding from "./components/Onboarding";
-import AuthScreen from "./screens/AuthScreen";
+import AuthScreen from "./screens/SignUpScreen";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -12,6 +12,8 @@ import HomeSreen from "./screens/HomeSreen";
 import CreateProgramScreen from "./screens/CreateProgramScreen";
 import Activities from "./screens/Activities";
 import ProfileScreen from "./screens/ProfileScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 const stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -65,7 +67,8 @@ export default function App() {
         >
           {/* <stack.Screen name="Home1" component={HomeTaps} /> */}
           <stack.Screen name="onBoarding" component={Onboarding} />
-          <stack.Screen name="Register" component={AuthScreen} />
+          <stack.Screen name="signup" component={SignUpScreen} />
+          <stack.Screen name="login" component={LoginScreen} />
           <stack.Screen name="Activities" component={Activities} />
         </stack.Navigator>
       </NavigationContainer>
