@@ -1,35 +1,71 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  KeyboardAvoidingView,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { FIREBASE_AUTH } from "../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [signUpError, setSignUpError] = useState("");
 
-  const handleCreateAccount = () => {
-    const userData = {
-      name,
-      email,
-      password,
-      confirmPassword,
-    };
-    console.log(userData);
+  // firebase auth instance
+  const auth = FIREBASE_AUTH;
+
+  const handleCreateAccount = async () => {
+    setLoading(true);
+
+    if (!email || !password) {
+      setSignUpError("form incomplete.!");
+      setTimeout(() => {
+        setSignUpError("");
+      }, 3000);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      // console.log(response);
+      setLoading(false);
+    } catch (err: any) {
+      alert("sign Up failed " + err.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+
+      //  behavior="padding"
+    >
       <Text style={styles.title}>Create An Account</Text>
       <View style={styles.form}>
-        <TextInput
+        {/* <TextInput
           style={styles.input}
           placeholder="User name"
           autoCorrect={false}
           onChangeText={(name) => setName(name)}
-        />
+        /> */}
         <TextInput
           style={styles.input}
           placeholder="email@gmail.com"
@@ -37,31 +73,35 @@ const SignUp = () => {
           onChangeText={(email) => setEmail(email)}
         />
 
-        <View style={styles.pwdSection}>
-          <TextInput
-            style={[styles.input, styles.pwdInput]}
-            //   secureTextEntry
-            placeholder="Password"
-            onChangeText={(password) => setPassword(password)}
-          />
-          <TextInput
-            style={[styles.input, styles.pwdInput]}
-            //   secureTextEntry
-            placeholder="Confirm password"
-            onChangeText={(confirmPassword) =>
-              setConfirmPassword(confirmPassword)
-            }
-          />
-        </View>
-        <Pressable style={styles.pressable} onPress={handleCreateAccount}>
+        <TextInput
+          style={[styles.input]}
+          //   secureTextEntry
+          placeholder="Password"
+          onChangeText={(password) => setPassword(password)}
+        />
+
+        {loading ? (
+          <ActivityIndicator size={"large"} color={"#5b45db"} />
+        ) : (
+          <Pressable style={styles.pressable} onPress={handleCreateAccount}>
+            <Text
+              style={{
+                color: "white",
+              }}
+            >
+              Sign Up
+            </Text>
+          </Pressable>
+        )}
+        {signUpError && (
           <Text
             style={{
-              color: "white",
+              color: "red",
             }}
           >
-            Sign Up
+            {signUpError}
           </Text>
-        </Pressable>
+        )}
         <View
           style={{ justifyContent: "center", flexDirection: "row", gap: 5 }}
         >
@@ -73,12 +113,12 @@ const SignUp = () => {
                 color: "#5b45db",
               }}
             >
-              SignUp
+              Login
             </Text>
           </Pressable>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
