@@ -9,7 +9,13 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleCreateAccount = () => {
-    alert("crating account");
+    const userData = {
+      name,
+      email,
+      password,
+      confirmPassword,
+    };
+    console.log(userData);
   };
 
   const navigation = useNavigation();
@@ -22,11 +28,13 @@ const SignUp = () => {
           style={styles.input}
           placeholder="User name"
           autoCorrect={false}
+          onChangeText={(name) => setName(name)}
         />
         <TextInput
           style={styles.input}
           placeholder="email@gmail.com"
           autoCorrect={false}
+          onChangeText={(email) => setEmail(email)}
         />
 
         <View style={styles.pwdSection}>
@@ -34,11 +42,15 @@ const SignUp = () => {
             style={[styles.input, styles.pwdInput]}
             //   secureTextEntry
             placeholder="Password"
+            onChangeText={(password) => setPassword(password)}
           />
           <TextInput
             style={[styles.input, styles.pwdInput]}
             //   secureTextEntry
             placeholder="Confirm password"
+            onChangeText={(confirmPassword) =>
+              setConfirmPassword(confirmPassword)
+            }
           />
         </View>
         <Pressable style={styles.pressable} onPress={handleCreateAccount}>
