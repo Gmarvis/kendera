@@ -1,15 +1,45 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FIREBASE_AUTH } from "../firebaseConfig";
 
 const Login = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [signUpError, setSignUpError] = useState("");
 
-  const handleCreateAccount = () => {
-    alert("crating account");
+  const auth = FIREBASE_AUTH;
+
+  const handleLogin = async () => {
+    setLoading(true);
+
+    if (!email || !password) {
+      setSignUpError("form incomplete.!");
+      setTimeout(() => {
+        setSignUpError("");
+      }, 3000);
+      return;
+    }
+
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      // console.log(response);
+      setLoading(false);
+    } catch (err: any) {
+      alert("sign Up failed " + err.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const navigation = useNavigation();
@@ -22,23 +52,38 @@ const Login = () => {
           style={styles.input}
           placeholder="email@gmail.com"
           autoCorrect={false}
+          onChangeText={(email) => setEmail(email)}
         />
 
         <TextInput
           style={styles.input}
           secureTextEntry
           placeholder="Password"
+          onChangeText={(password) => setPassword(password)}
         />
 
-        <Pressable style={styles.pressable} onPress={handleCreateAccount}>
+        {loading ? (
+          <ActivityIndicator size={"large"} color={"#5b45db"} />
+        ) : (
+          <Pressable style={styles.pressable} onPress={handleLogin}>
+            <Text
+              style={{
+                color: "white",
+              }}
+            >
+              Login
+            </Text>
+          </Pressable>
+        )}
+        {signUpError && (
           <Text
             style={{
-              color: "white",
+              color: "red",
             }}
           >
-            Login
+            {signUpError}
           </Text>
-        </Pressable>
+        )}
         <View
           style={{ justifyContent: "center", flexDirection: "row", gap: 5 }}
         >

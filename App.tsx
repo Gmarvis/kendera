@@ -14,6 +14,10 @@ import Activities from "./screens/Activities";
 import ProfileScreen from "./screens/ProfileScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import LoginScreen from "./screens/LoginScreen";
+import { useEffect, useState } from "react";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_AUTH } from "./firebaseConfig";
+import { AppContexProvider } from "./context/AppContext";
 
 const stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -45,6 +49,7 @@ const HomeTaps = () => {
           tabBarIcon: () => <Ionicons name={"add-circle"} size={25} />,
         }}
       />
+
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
@@ -56,23 +61,51 @@ const HomeTaps = () => {
   );
 };
 
-export default function App() {
+const NewUserScreens = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          {/* <stack.Screen name="Home1" component={HomeTaps} /> */}
-          <stack.Screen name="onBoarding" component={Onboarding} />
-          <stack.Screen name="signup" component={SignUpScreen} />
-          <stack.Screen name="login" component={LoginScreen} />
-          <stack.Screen name="Activities" component={Activities} />
-        </stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+    // <NavigationContainer>
+    <stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <stack.Screen name="onBoarding" component={Onboarding} />
+      <stack.Screen name="signup" component={SignUpScreen} />
+      <stack.Screen name="login" component={LoginScreen} />
+    </stack.Navigator>
+    // </NavigationContainer>
+  );
+};
+
+export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      // console.log(user);
+      setUser(user);
+    });
+  }, []);
+
+  return (
+    <AppContexProvider>
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          <stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            {!user ? (
+              <stack.Screen name="onBoarding" component={NewUserScreens} />
+            ) : (
+              <stack.Screen name="Home1" component={HomeTaps} />
+            )}
+            <stack.Screen name="Activities" component={Activities} />
+          </stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </AppContexProvider>
   );
 }
 

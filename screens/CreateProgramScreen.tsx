@@ -1,41 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppContext } from "../context/AppContext";
+import { useNavigation } from "@react-navigation/native";
 
 const CreateProgramScreen = () => {
-  const handleCreateProgram = () => {};
+  const [programName, SetProgramName] = useState("");
+  const [description, seDescription] = useState("");
+
+  const { setAllProgram } = useAppContext();
+  const navigation = useNavigation();
+
+  // CREATE PROGRAM
+  const handleCreateProgram = async () => {
+    try {
+      if (!programName || !description) {
+        throw new Error("please make sure you fill the form propaly");
+      }
+      const program = {
+        id: new Date(),
+        name: programName,
+        description,
+      };
+
+      let storedData = JSON.parse(
+        (await AsyncStorage.getItem("programData")) || "[]"
+      );
+
+      const savedProgram = await AsyncStorage.setItem(
+        "programData",
+        JSON.stringify([program, ...storedData])
+      );
+
+      const jsonValue = await AsyncStorage.getItem("programData");
+      if (jsonValue) {
+        setAllProgram(JSON.parse(jsonValue));
+        navigation.navigate("Home");
+        // console.log("jsonValue", JSON.parse(jsonValue));
+      }
+    } catch (err: any) {
+      alert(err);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.form}>
         <Text style={styles.title}>Program Name</Text>
-        <TextInput style={styles.input} />
-        {/* <Text>Duration</Text> */}
-        {/* <View style={styles.duration}>
-          <TextInput
-            style={styles.duratioInput}
-            placeholder="Months"
-            keyboardType={"number-pad"}
-            maxLength={2}
-          />
-          <TextInput
-            style={styles.duratioInput}
-            placeholder="Weeks"
-            keyboardType={"number-pad"}
-            maxLength={2}
-          />
-          <TextInput
-            style={styles.duratioInput}
-            placeholder="Days"
-            keyboardType={"number-pad"}
-            maxLength={2}
-          />
-        </View> */}
+        <TextInput
+          style={styles.input}
+          onChangeText={(programName) => SetProgramName(programName)}
+        />
+
         <Text style={styles.title}>Description</Text>
         <TextInput
           style={styles.description}
+          onChangeText={(description) => seDescription(description)}
           multiline={true}
           numberOfLines={4}
-          maxLength={40}
+          maxLength={500}
         />
         <Pressable style={styles.pressable} onPress={handleCreateProgram}>
           <Text
