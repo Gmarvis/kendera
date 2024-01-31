@@ -17,6 +17,7 @@ import LoginScreen from "./screens/LoginScreen";
 import { useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./firebaseConfig";
+import { AppContexProvider } from "./context/AppContext";
 
 const stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,7 +61,7 @@ const HomeTaps = () => {
   );
 };
 
-const newUserScreens = () => {
+const NewUserScreens = () => {
   return (
     // <NavigationContainer>
     <stack.Navigator
@@ -87,22 +88,24 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          {!user ? (
-            <stack.Screen name="onBoarding" component={newUserScreens} />
-          ) : (
-            <stack.Screen name="Home1" component={HomeTaps} />
-          )}
-          <stack.Screen name="Activities" component={Activities} />
-        </stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+    <AppContexProvider>
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          <stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            {!user ? (
+              <stack.Screen name="onBoarding" component={NewUserScreens} />
+            ) : (
+              <stack.Screen name="Home1" component={HomeTaps} />
+            )}
+            <stack.Screen name="Activities" component={Activities} />
+          </stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </AppContexProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,27 +6,33 @@ import {
   FlatList,
   TextInput,
   Pressable,
+  Button,
 } from "react-native";
-import { programs } from "../dummyData";
+// import { programs } from "../dummyData";
 import ProgramCards from "../components/ProgramCards";
-
 import Ionicons from "@expo/vector-icons/Ionicons";
-
-const data = new Array(50).fill(0).map((_, index) => ({ id: index }));
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppContext } from "../context/AppContext";
 
 const HomeSreen = ({ navigation }: any) => {
+  // const [programs, setPrograms] = useState<Program[]>([]);
+  const { allPrograms } = useAppContext();
+
+  const clearStorage = async () => {
+    await AsyncStorage.removeItem("programData");
+  };
   return (
     <View style={styles.container}>
       <TextInput style={styles.input} placeholder="Search..." />
+      <Button title="delete program" onPress={clearStorage} />
       <FlatList
-        data={programs}
+        data={allPrograms}
         renderItem={(program) => {
           return (
             <ProgramCards
-              name={program.item.name}
-              description={program.item.description}
-              start_date={program.item.start_date}
-              end_date={program.item.end_date}
+              id={program.item.id}
+              name={program.item?.name}
+              description={program.item?.description}
             />
           );
         }}

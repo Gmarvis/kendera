@@ -2,14 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-type ProgramPropType = {
-  name: string;
-  description: string;
-  start_date: string;
-  end_date: string;
-};
-
-const ProgramCards = ({ ...program }: ProgramPropType) => {
+const ProgramCards = ({ ...program }: Program) => {
   return (
     <Pressable
       style={styles.container}
@@ -17,7 +10,7 @@ const ProgramCards = ({ ...program }: ProgramPropType) => {
     >
       <View style={styles.header}>
         <Text style={styles.headerText}>{program.name}</Text>
-        <Pressable onPress={() => alert("you have pressed on the menu bar")}>
+        <Pressable>
           <Ionicons name={"ellipsis-vertical-outline"} size={25} />
         </Pressable>
       </View>
@@ -25,11 +18,11 @@ const ProgramCards = ({ ...program }: ProgramPropType) => {
       <View style={styles.dates}>
         <View>
           <Text style={styles.dateTitle}>Start Date</Text>
-          <Text>{program.start_date}</Text>
+          <Text>{program.id}</Text>
         </View>
         <View>
-          <Text style={styles.dateTitle}>End Date</Text>
-          <Text>{program.end_date}</Text>
+          {/* <Text style={styles.dateTitle}>End Date</Text> */}
+          {/* <Text>{program.end_date}</Text> */}
         </View>
       </View>
     </Pressable>
